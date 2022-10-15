@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_fusibox/templates *
+recursive-include octoprint_fusibox/translations *
+recursive-include octoprint_fusibox/static *

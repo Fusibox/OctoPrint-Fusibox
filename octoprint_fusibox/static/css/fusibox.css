@@ -1,0 +1,78 @@
+.temperature {
+    color: red;
+    font-weight: bolder;
+    font-size: smaller;
+}
+
+.humidity {
+    color: blue;
+    font-weight: bolder;
+    font-size: smaller;
+}
+
+.camera-buttons {
+    text-align: center;
+    font-size: xx-large;
+    color: black;
+    user-select: none;
+}
+
+.camera-buttons > i {
+    cursor: pointer;
+}
+
+.camera-buttons > i:hover {
+    opacity: 60%;
+}
+
+.camera-buttons > i:active {
+    opacity: 100%;
+    color: darkgray;
+}
+
+.mic-buttons {
+    text-align: center;
+    font-size: xx-large;
+    color: black;
+    user-select: none;
+}
+
+.mic-buttons > i {
+    cursor: pointer;
+}
+
+.mic-buttons > i:hover {
+    opacity: 60%;
+}
+
+.mic-buttons > i:active {
+    opacity: 100%;
+    color: darkgray;
+}
+
+[id $= '-button']:focus {
+    outline: 0;
+}
+
+[id $= '-button'] {
+    font-size: large;
+    padding: 10px;
+}
+
+#files-container tr > td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#files-container tr > td:nth-child(1) {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#files-container tr > td:nth-child(5) {
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: x-small;
+}

@@ -1,0 +1,136 @@
+<h3>FusiBox  &nbsp; | &nbsp; <span class="temperature">Temp: <span id="temperature"></span> °C</span>&nbsp; - &nbsp;<span class="humidity">Hum: <span id="humidity"></span> %</span></h3>
+<div class="row-fluid">
+    <div class="pull-left" style="width: 50%; text-align: center;">
+            <div id="camera-container" data-bind="visible: false">
+                <div class="row-fluid">
+                    <div class="pull-right"  style="width: 100%;">
+                        <img style="max-width: 100%"/>
+                    </div>
+                </div>
+                <div class="row-fluid camera-buttons">
+                    <i class="fa fa-video" id="camera-action-video"></i>
+                    <i class="fa fa-image" id="camera-action-image"></i>
+                </div>
+                <br>
+            </div>
+            <div class="row-fluid">
+                <button id="camera-button" class="btn btn-primary">{{ _('Camera') }}</button>
+            </div>
+    </div>
+    <div class="pull-right" style="width: 50%; text-align: center;">
+        <div id="mic-container" data-bind="visible: false">
+            <div class="row-fluid">
+                <div class="pull-right"  style="width: 100%;">
+                    <audio controls="controls" type="audio/x-wav;codec=pcm">
+                </div>
+            </div>
+            <div class="row-fluid mic-buttons">
+                <i class="fa fa-microphone" id="mic-action-audio"></i>
+            </div>
+            <br>
+        </div>
+        <div class="row-fluid">
+            <button id="mic-button" class="btn btn-primary">{{ _('Microphone') }}</button>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<div class="row-fluid" style="text-align: center;">
+    <button id="light-button" class="btn btn-primary">{{ _('Main Light') }}<span></span></button>&nbsp;&nbsp;&nbsp;
+    <button id="power-button" class="btn btn-primary">{{ _('Power Supply') }}<span></span></button>&nbsp;&nbsp;&nbsp;
+    <button id="fan-button" class="btn btn-primary">{{ _('Fan Cooler') }}<span></span></button>
+</div>
+<br>
+<div class="row-fluid" id="files-container-all">
+    <h1 style="font-weight: bold"> {{_('Files management')}} </h1>
+
+    <div style="text-align: center">
+        <div class="pull-left" style="width: 80%; border: black 2px;">
+            <table id="files-container" style="max-width: 100%">
+                <thead>
+                    <tr>
+                        <th></th><th>Name</th><th>Type</th><th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>fusibox-image-25-09-2022-17-29-44.jpg</td>
+                        <td>image</td>
+                        <td>15Kb</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pull-right" style="width: 20%">
+            <button id="refresh-button" class="btn btn-sm btn-outline-primary" style="font-size: small" onclick="refreshFiles()">{{ _('Refresh') }}</button>
+            <br>
+            <br>
+            <button id="delete-button" class="btn btn-sm btn-outline-primary" style="font-size: small" onclick="deleteFiles()">{{ _('Delete') }}</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function refreshFiles() {
+        fetch(location.protocol + '//' + location.hostname + ':8000/files/list')
+            .then(data => data.json())
+            .then(data => {
+                let noData = true;
+                $('#files-container tbody').html('');
+                for (image of data.images) {
+                    $('#files-container tbody').append('<tr>' +
+                        '<td><input type="checkbox" class="file" id="file|image|' + image.name + '"></td>' +
+                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=image&name=' + image.name + '" target="_blank">' + image.name + '</a></td>' +
+                        '<td>Image</td>' +
+                        '<td>' + image.size + 'KB</td>');
+                    noData = false;
+                }
+                for (video of data.videos) {
+                    $('#files-container tbody').append('<tr>' +
+                        '<td><input type="checkbox" class="file" id="file|video|' + video.name + '"></td>' +
+                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=video&name=' + video.name + '" target="_blank">' + video.name + '</a></td>' +
+                        '<td>Video</td>' +
+                        '<td>' + video.size + 'KB</td>');
+                    noData = false;
+                }
+                for (audio of data.audios) {
+                    $('#files-container tbody').append('<tr>' +
+                        '<td><input type="checkbox" class="file" id="file|audio|' + audio.name + '"></td>' +
+                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=audio&name=' + audio.name + '" target="_blank">' + audio.name + '</a></td>' +
+                        '<td>Audio</td>' +
+                        '<td>' + audio.size + 'KB</td>');
+                    noData = false;
+                }
+
+                if (noData) {
+                    document.getElementById('files-container-all').style.display = 'none';
+                } else {
+                    document.getElementById('files-container-all').style.display = 'block';
+                }
+            });
+    }
+
+    function deleteFiles() {
+        filesToDelete = Array.from(document.querySelectorAll('[id^="file|"]:checked')).map(item => {
+            return {
+                type: item.id.split('|')[1],
+                name: item.id.split('|')[2]
+            }
+        });
+
+        if (confirm('Are you sure?')) {
+            fetch('http://localhost:8000/files/delete', {
+                method: 'POST', 
+                body: JSON.stringify({ files: filesToDelete}), 
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(data => data.json())
+            .then(data => {
+                if (data.result) refreshFiles();
+            });
+        }
+    }
+
+    refreshFiles();
+</script>

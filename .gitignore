@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.db
+
 # C extensions
 *.so
 
@@ -127,3 +129,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+octoprint_fusibox/files/image/*
+octoprint_fusibox/files/audio/*
+octoprint_fusibox/files/video/*

@@ -1,0 +1,11 @@
+Adafruit_Blinka==8.2.0
+adafruit_circuitpython_dht==3.7.7
+adafruit_python_shell==1.3.3
+Bluetin_Echo==0.2.0
+board==1.0
+Flask==1.1.2
+octoprint==1.8.2
+picamera==1.13
+pyaudio==0.2.12
+setuptools==52.0.0
+websockets==10.3
