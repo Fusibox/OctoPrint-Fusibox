@@ -60,7 +60,7 @@ class Camera(object):
             
             if not self.video_writer:
                 print('Starting the recording')
-                now = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+                now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
                 self.video_file_name = self.configs['settings']['video_prefix']['value'] + '-' + now + '.avi'
                 self.video_writer = cv2.VideoWriter(self.basepath + '/files/video/' + self.video_file_name, cv2.VideoWriter_fourcc('M','J','P','G'), 2, (width, height))
             

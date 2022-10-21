@@ -73,7 +73,7 @@
 
 <script>
     function refreshFiles() {
-        fetch(location.protocol + '//' + location.hostname + ':8000/files/list')
+        fetch(PLUGIN_BASEURL + 'fusibox/file/list')
             .then(data => data.json())
             .then(data => {
                 let noData = true;
@@ -81,7 +81,7 @@
                 for (image of data.images) {
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|image|' + image.name + '"></td>' +
-                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=image&name=' + image.name + '" target="_blank">' + image.name + '</a></td>' +
+                        '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=image&name=' + image.name + '" target="_blank">' + image.name + '</a></td>' +
                         '<td>Image</td>' +
                         '<td>' + image.size + 'KB</td>');
                     noData = false;
@@ -89,7 +89,7 @@
                 for (video of data.videos) {
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|video|' + video.name + '"></td>' +
-                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=video&name=' + video.name + '" target="_blank">' + video.name + '</a></td>' +
+                        '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=video&name=' + video.name + '" target="_blank">' + video.name + '</a></td>' +
                         '<td>Video</td>' +
                         '<td>' + video.size + 'KB</td>');
                     noData = false;
@@ -97,7 +97,7 @@
                 for (audio of data.audios) {
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|audio|' + audio.name + '"></td>' +
-                        '<td><a href="' + location.protocol + '//' + location.hostname + ':8000/file?type=audio&name=' + audio.name + '" target="_blank">' + audio.name + '</a></td>' +
+                        '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=audio&name=' + audio.name + '" target="_blank">' + audio.name + '</a></td>' +
                         '<td>Audio</td>' +
                         '<td>' + audio.size + 'KB</td>');
                     noData = false;
@@ -120,13 +120,12 @@
         });
 
         if (confirm('Are you sure?')) {
-            fetch('http://localhost:8000/files/delete', {
-                method: 'POST', 
-                body: JSON.stringify({ files: filesToDelete}), 
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(data => data.json())
-            .then(data => {
+            $.ajax({
+                method: 'POST',
+                url: PLUGIN_BASEURL + 'fusibox/file/delete', 
+                data: JSON.stringify({ files: filesToDelete }),
+                contentType: 'application/json'
+            }).done(data => {
                 if (data.result) refreshFiles();
             });
         }

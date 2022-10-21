@@ -51,7 +51,7 @@ class Microphone(object):
                 
                 if not self.wave_object:
                     self.frames = []
-                    now = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+                    now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
                     self.file_name = self.configs['settings']['audio_prefix']['value'] + '-' + now + '.wav'
                     
                 self.wave_object = wave.open(self.basepath + '/files/audio/' + self.file_name, 'wb')

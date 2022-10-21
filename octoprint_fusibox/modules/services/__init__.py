@@ -1,8 +1,4 @@
-import asyncio
-
-from json import loads, dumps
 from datetime import datetime
-from websockets import serve
 
 def fans(*args):
     sensors = args[1]
@@ -157,47 +153,3 @@ def sensors(*args):
             configs['sensors'][name]['value'] = data[name]
         except:
             pass
-
-def websocket(*args):
-    configs = args[1]['settings']
-
-    async def echo(websocket):
-        async for data in websocket:
-            try:
-                data = loads(data)
-            except:
-                pass
-
-            if type(data) is dict:
-                key = list(data.keys())[0]
-                value = list(data.values())[0]
-
-                if key in configs:
-                    if value == '':
-                        await websocket.send(configs[key]['value'])
-                    else:
-                        for name, val in value.items():
-                            configs[key][name] = val
-            elif data in args[1]:
-                configs2 = args[1].copy()
-                if 'sensors' in data:
-                    configs2 = {
-                        'sensors': {
-                            'temperature': {
-                                'value': configs2[data]['temperature']['value']
-                            },
-                            'humidity': {
-                                'value': configs2[data]['humidity']['value']
-                            },
-                            'distance': {
-                                'value': configs2[data]['distance']['value']
-                            }
-                        }
-                    }
-                await websocket.send(data + '**' + dumps({i: j for i,j in configs2[data].items()}))
-
-    async def main():
-        async with serve(echo, "0.0.0.0", 8765):
-            await asyncio.Future()
-
-    asyncio.run(main())

@@ -1,179 +1,155 @@
-from distutils.command.config import config
 import os
-import sys
-import shutil
-basepath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(1, basepath)
-    
-import services
 import octoprint.plugin
 
-from flask import Flask, render_template, Response, send_file, jsonify, request, make_response
-from configs import configs
+from json import dumps
+from flask import render_template, Response, request, render_template, jsonify, send_file
+from .modules import app, streamHandler
+from .configs import configs
 from datetime import datetime
-from flask_cors import CORS
-from modules.jobs import Jobs
-from modules.i2smic import run
-from modules.camera import Camera
-from modules.outputs import Outputs
-from modules.sensors import Sensors
-from modules.database import Database
-from modules.microphone import Microphone
-
-try:
-    with open("/etc/modprobe.d/snd-i2smic-rpi.conf") as f:
-        if not "options snd-i2smic-rpi rpi_platform_generation=2" in f.read():
-            run()
-except:
-    pass
-
-class App():
-    configs = {}
-    
-    def __init__(self, configs):
-        self.configs = configs
-        
-        # Flask Web Server
-        self.camera = Camera(self.configs, basepath)
-        self.microphone = Microphone(self.configs, basepath)
-        self.app = Flask(__name__, static_folder='./public')
-        CORS(self.app)
-
-        @self.app.route('/audio', methods=['GET'])
-        def audio_get():
-            return render_template('fusibox_audio.html')
-
-        @self.app.route('/video', methods=['GET'])
-        def video_get():
-            return render_template('fusibox_video.html')
-
-        @self.app.route('/video-feed', methods=['GET'])
-        def video_feed():
-            return Response(self.camera.gen(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
-
-        @self.app.route('/video/recording/start', methods=['GET'])
-        def video_start():
-            self.camera.recording = True
-            return { 'result': True }
-        
-        @self.app.route('/video/recording/stop', methods=['GET'])
-        def video_stop():
-            self.camera.recording = False
-            return { 'result': True, 'file': self.camera.video_file_name }
-        
-        @self.app.route('/image-feed', methods=['GET'])
-        def image_feed():
-            now = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-            file_name = self.configs['settings']['image_prefix']['value'] + '-' + now + '.jpg'
-            with open(basepath + '/files/image/' + file_name, 'wb') as f:
-                f.write(self.camera.get_image())
-            return send_file(basepath + '/files/image/' + file_name, as_attachment=True)
-        
-        @self.app.route('/file', methods=['GET'])
-        def file_get():
-            file_name = request.args.get('name');
-            file_type = request.args.get('type');
-            
-            if not file_type in ['image', 'video', 'audio'] or not os.path.exists(basepath + '/files/' + file_type + '/' + file_name):
-                response = jsonify({"result": False})
-                response.headers.add('Access-Control-Allow-Origin', '*')
-                return response
-            
-            return send_file(basepath + '/files/' + file_type + '/' + file_name, as_attachment=True)
-        
-        @self.app.route('/files/delete', methods=['POST'])
-        def file_delete():
-            files = request.get_json()
-            if not 'files' in files:
-                return Response('Files not found', status = 400)
-            
-            for file in files['files']:
-                file_type = file['type']
-                file_name = file['name']
-                os.unlink(basepath + '/files/' + file_type + '/' + file_name)
-            
-            return {"result": True}
-
-        @self.app.route('/audio-feed', methods=['GET'])
-        def audio_feed():
-            return Response(self.microphone.gen())
-        
-        @self.app.route('/audio/recording/start', methods=['GET'])
-        def audio_start():
-            self.microphone.recording = True
-            return { 'result': True }
-        
-        @self.app.route('/audio/recording/stop', methods=['GET'])
-        def audio_stop():
-            self.microphone.recording = False
-            return { 'result': True, 'file': self.microphone.file_name }
-        
-        @self.app.route('/files/list', methods=['GET'])
-        def file_list():
-            images = os.listdir(basepath + '/files/image')
-            audios = os.listdir(basepath + '/files/audio')
-            videos = os.listdir(basepath + '/files/video')
-            
-            images.sort(reverse=True);
-            audios.sort(reverse=True);
-            videos.sort(reverse=True);
-            
-            images = [{ 'name': x, 'size': round(os.path.getsize(basepath + '/files/image/' + x) / 1024, 2) } for x in images if not x in ['1.jpg', '2.jpg', '3.jpg']]
-            audios = [{ 'name': x, 'size': round(os.path.getsize(basepath + '/files/audio/' + x) / 1024, 2) } for x in audios]
-            videos = [{ 'name': x, 'size': round(os.path.getsize(basepath + '/files/video/' + x) / 1024, 2) } for x in videos]
-            
-            response = jsonify({
-                "images": images,
-                "audios": audios,
-                "videos": videos
-            })
-            return response
-        
-        @self.app.route('/device/disk', methods=['GET'])
-        def disk_free():
-            total, used, free = shutil.disk_usage("/")
-            response = jsonify({
-                "total": total / float(1<<20),
-                "used": used / float(1<<20),
-                "free": free / float(1<<20)
-            })
-            return response
-
-        def web_server(*args):
-            args[1].run(host = '0.0.0.0', port=8000, debug = False, threaded = True)
-
-        self.db = Database(basepath)
-        self.db.initialize()
-        self.db.sincronize_settings(self.configs)
-
-        def sincronize_database(*args):
-            self.db.sincronize_settings(args[1], True)
-
-        self.data = {}
-        self.outputs = Outputs(self.configs)
-        self.sensors = Sensors(self.configs)
-
-        jobs = Jobs()
-        jobs.new(web_server, 'WebServer', 1, [self.app]).execute()
-        jobs.new(services.fans, 'Fans', 1, [self.data, self.configs, self.outputs]).execute()
-        jobs.new(services.lights, 'Lights', 1, [self.data, self.configs, self.outputs]).execute()
-        jobs.new(services.relays, 'Relays', 1, [self.data, self.configs, self.outputs]).execute()
-        jobs.new(services.sensors, 'Sensors', 1, [self.data, self.configs, self.sensors]).execute()
-        jobs.new(services.websocket, 'WebSocket', 1, [self.configs]).execute()
-        jobs.new(sincronize_database, 'SincronizeDatabase', 1, [self.configs]).execute()
 
 class FusiBoxPlugin(octoprint.plugin.StartupPlugin, 
                     octoprint.plugin.TemplatePlugin, 
                     octoprint.plugin.SettingsPlugin,
-                    octoprint.plugin.AssetPlugin):
-    app = None
+                    octoprint.plugin.AssetPlugin,
+                    octoprint.plugin.BlueprintPlugin):
     
     def __init__(self, configs):
-        self.app = App(configs)
+        self.basepath = os.path.dirname(os.path.abspath(__file__))
+        self.app = app.App(configs, self.basepath)
+        
+    def is_blueprint_csrf_protected(self):
+        return True
+    
+    @octoprint.plugin.BlueprintPlugin.route('/audio', methods=['GET'])
+    def audio_get(self):
+        return render_template('fusibox_audio.html')
+    
+    @octoprint.plugin.BlueprintPlugin.route('/audio/start', methods=['GET'])
+    def audio_start(self):
+        self.app.microphone.recording = True
+        return { 'result': True }
+    
+    @octoprint.plugin.BlueprintPlugin.route('/audio/stop', methods=['GET'])
+    def audio_stop(self):
+        self.app.microphone.recording = False
+        return { 'result': True, 'file': self.app.microphone.video_file_name }
+    
+    @octoprint.plugin.BlueprintPlugin.route('/image/feed', methods=['GET'])
+    def image_feed(self):
+        now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        file_name = self.app.configs['settings']['image_prefix']['value'] + '-' + now + '.jpg'
+        with open(self.basepath + '/files/image/' + file_name, 'wb') as f:
+            f.write(self.app.camera.get_image())
+        return send_file(self.basepath + '/files/image/' + file_name, as_attachment=True)
+    
+    @octoprint.plugin.BlueprintPlugin.route('/video/start', methods=['GET'])
+    def video_start(self):
+        self.app.camera.recording = True
+        return { 'result': True }
+    
+    @octoprint.plugin.BlueprintPlugin.route('/video/stop', methods=['GET'])
+    def video_stop(self):
+        self.app.camera.recording = False
+        return { 'result': True, 'file': self.app.camera.video_file_name }
+    
+    @octoprint.plugin.BlueprintPlugin.route('/file', methods=['GET'])
+    def file_get(self):
+        file_name = request.args.get('name');
+        file_type = request.args.get('type');
+        
+        if not file_type in ['image', 'video', 'audio'] or not os.path.exists(self.basepath + '/files/' + file_type + '/' + file_name):
+            return {'result': False}
+        
+        return send_file(self.basepath + '/files/' + file_type + '/' + file_name, as_attachment=True)
+        
+    @octoprint.plugin.BlueprintPlugin.route('/file/list', methods=['GET'])
+    def file_list(self):
+        images = os.listdir(self.basepath + '/files/image')
+        audios = os.listdir(self.basepath + '/files/audio')
+        videos = os.listdir(self.basepath + '/files/video')
+        
+        images.sort(reverse=True);
+        audios.sort(reverse=True);
+        videos.sort(reverse=True);
+        
+        images = [{ 'name': x, 'size': round(os.path.getsize(self.basepath + '/files/image/' + x) / 1024, 2) } for x in images if not x in ['1.jpg', '2.jpg', '3.jpg'] and '.jpg' in x]
+        audios = [{ 'name': x, 'size': round(os.path.getsize(self.basepath + '/files/audio/' + x) / 1024, 2) } for x in audios if '.wav' in x]
+        videos = [{ 'name': x, 'size': round(os.path.getsize(self.basepath + '/files/video/' + x) / 1024, 2) } for x in videos if '.avi' in x]
+        
+        response = jsonify({
+            'images': images,
+            'audios': audios,
+            'videos': videos
+        })
+        return response
+        
+    @octoprint.plugin.BlueprintPlugin.route('/file/delete', methods=['POST'])
+    def file_delete(self):
+        files = request.get_json()
+        if files is None or not 'files' in files:
+            return Response('Files not found', status = 400)
+        
+        for file in files['files']:
+            file_type = file['type']
+            file_name = file['name']
+            os.unlink(self.basepath + '/files/' + file_type + '/' + file_name)
+        
+        return {'result': True}
+    
+    @octoprint.plugin.BlueprintPlugin.route('/sensors', methods=['GET'])
+    def sensors_get(self):
+        configs2 = self.app.configs.copy()
+        configs2 = {
+            'sensors': {
+                'temperature': {
+                    'value': configs2['sensors']['temperature']['value']
+                },
+                'humidity': {
+                    'value': configs2['sensors']['humidity']['value']
+                },
+                'distance': {
+                    'value': configs2['sensors']['distance']['value']
+                }
+            }
+        }
+        
+        response = 'sensors**' + dumps({i: j for i,j in configs2['sensors'].items()})
+        self._plugin_manager.send_plugin_message(self._identifier, response)
+        return ''
+    
+    @octoprint.plugin.BlueprintPlugin.route('/outputs', methods=['GET'])
+    def outputs_get(self):
+        response = 'outputs**' + dumps({i: j for i,j in self.app.configs['outputs'].items()})
+        self._plugin_manager.send_plugin_message(self._identifier, response)
+        return ''
+    
+    @octoprint.plugin.BlueprintPlugin.route('/settings', methods=['GET'])
+    def settings_get(self):
+        response = 'settings**' + dumps({i: j for i,j in self.app.configs['settings'].items()})
+        self._plugin_manager.send_plugin_message(self._identifier, response)
+        return ''
+    
+    @octoprint.plugin.BlueprintPlugin.route('/settings', methods=['POST'])
+    def settings_post(self):
+        data = request.get_json()
+        key = list(data.keys())[0]
+        value = list(data.values())[0]
+
+        if key in self.app.configs['settings']:
+            self._logger.info('Changing ' + key + ' configurations')
+            if value == '':
+                self._plugin_manager.send_plugin_message(self._identifier, self.app.configs['settings'][key]['value'])
+                return ''
+            else:
+                for name, val in value.items():
+                    self.app.configs['settings'][key][name] = val
+                    
+        return ''
     
     def on_after_startup(self):
-        self._logger.info(__file__)
-        self._logger.info("HELLO! I'm working right now... (more: %s)" % self._settings.get(["url"]))
+        self._settings.set(['videoRecording'], False)
+        self._settings.set(['audioRecording'], False)
+        self._settings.save()
         
     def on_settings_initialized(self):
         pass
@@ -218,6 +194,9 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
                  settings[internal_names[k]]['max'] = int(v)
             else:
                 settings[internal_names[k]]['value'] = v if not type(v) is bool else int(v)
+                
+        self._plugin_manager.send_plugin_message(self._identifier, dict(type='error', msg='Invalid JSON for Webhooks OAUTH DATA Settings'))
+
 
     def get_settings_defaults(self):
         return dict(
@@ -252,21 +231,39 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
             fan2=True,
             videoPrefix='fusibox-video',
             audioPrefix='fusibox-audio',
-            imagePrefix='fusibox-image'
+            imagePrefix='fusibox-image',
+            videoRecording=False,
+            audioRecording=False
         )
 
     def get_template_configs(self):
         return [
-            dict(type="navbar", custom_bindings=False),
-            dict(type="settings", custom_bindings=False)
+            dict(type='navbar', custom_bindings=False),
+            dict(type='settings', custom_bindings=False)
         ]
         
     def get_assets(self):
         return dict(
-            js=["js/fusibox.js"],
-            css=["css/fusibox.css"]
+            js=['js/fusibox.js'],
+            css=['css/fusibox.css']
         )
 
-__plugin_name__ = "FusiBox"
-__plugin_pythoncompat__ = ">=3.6"
-__plugin_implementation__ = FusiBoxPlugin(configs)
+    def on_startup(self, host, port):
+        pass
+        
+    def route_hook(self, server_routes, *args, **kwargs):
+        return [
+            (r'/video/feed/(.*)', streamHandler.StreamHandler, { 'camera': self.app.camera })
+        ]
+
+__plugin_name__ = 'FusiBox'
+__plugin_pythoncompat__ = '>=3.6'
+
+def __plugin_load__():
+    global __plugin_implementation__
+    global __plugin_hooks__
+    
+    __plugin_implementation__ = FusiBoxPlugin(configs)
+    __plugin_hooks__ = {
+        'octoprint.server.http.routes': __plugin_implementation__.route_hook
+    }

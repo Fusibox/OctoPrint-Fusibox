@@ -33,7 +33,7 @@ plugin_url = "https://github.com/hm1996/octoprint-fusibox"
 plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
-plugin_requires = ["Adafruit_Blinka==8.2.0","adafruit_circuitpython_dht==3.7.7","Bluetin_Echo==0.2.0","board==1.0","Flask==1.1.2","picamera==1.13","pyaudio==0.2.12","setuptools==52.0.0","websockets==10.3","adafruit-python-shell==1.3.3","opencv-python-headless","flask-cors"]
+plugin_requires = ["Adafruit_Blinka==8.2.0","adafruit_circuitpython_dht==3.7.7","Bluetin_Echo==0.2.0","board==1.0","Flask==1.1.2","picamera==1.13","pyaudio==0.2.12","setuptools==52.0.0","adafruit-python-shell==1.3.3","opencv-python-headless"]
 
 ### --------------------------------------------------------------------------------------------------------------------
 ### More advanced options that you usually shouldn't have to touch follow after this point
