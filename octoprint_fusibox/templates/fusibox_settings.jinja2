@@ -85,13 +85,14 @@
         <div class="control-group">
             <label class="control-label">Activation timeout:</label>
             <div class="controls">
-                <select data-bind="value: settings.plugins.fusibox.relayTimeout">
+                <select id="relayTimerSelect" data-bind="value: settings.plugins.fusibox.relayTimeout, valueAllowUnset: true">
                     <option value="7200000">2 hours</option>
                     <option value="14400000">4 hours</option>
                     <option value="28800000">8 hours</option>
                     <option value="36000000">10 hours</option>
-                    <option value="manual">Manual</option>
+                    <option value="">Manual</option>
                 </select>
+                <input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" id="relayTimerInput">
                 <span class="help-inline">The timeout describes the power supply will be ON after an activation.</span>
             </div>
         </div>
@@ -156,13 +157,14 @@
         <div class="control-group">
             <label class="control-label">Activation timeout:</label>
             <div class="controls">
-                <select data-bind="value: settings.plugins.fusibox.fanTimeout">
+                <select id="fanTimerSelect" data-bind="value: settings.plugins.fusibox.fanTimeout">
                     <option value="7200000">2 hours</option>
                     <option value="14400000">4 hours</option>
                     <option value="28800000">8 hours</option>
                     <option value="36000000">10 hours</option>
-                    <option value="manual">Manual</option>
+                    <option value="">Manual</option>
                 </select>
+                <input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" id="fanTimerInput">
                 <span class="help-inline">The timeout describes the time that the fan cooler will be ON after an activation.</span>
             </div>
         </div>

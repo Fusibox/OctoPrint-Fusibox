@@ -24,9 +24,9 @@ def fans(*args):
     if mode == 'schedule':
         if str(actual_weekday) in [str(i) for i in schedule['days']]:
             start_date = datetime.strptime(actual_date + ' ' + schedule['start'], '%Y-%m-%d %H:%M')
-            end_date = datetime.strptime(actual_date + ' ' + schedule['end'] + ':59', '%Y-%m-%d %H:%M:%S')
+            end_date = datetime.strptime(actual_date + ' ' + schedule['end'] + ':00', '%Y-%m-%d %H:%M:%S')
 
-            if datetime.now() >= start_date and datetime.now() <= end_date:
+            if datetime.now() >= start_date and datetime.now() < end_date:
                 if int(fan_1): outputs.write('fan_1', 1)
                 if int(fan_2): outputs.write('fan_2', 1)
             else:
@@ -120,9 +120,9 @@ def relays(*args):
     if mode == 'schedule':
         if str(actual_weekday) in [str(i) for i in schedule['days']]:
             start_date = datetime.strptime(actual_date + ' ' + schedule['start'], '%Y-%m-%d %H:%M')
-            end_date = datetime.strptime(actual_date + ' ' + schedule['end'] + ':59', '%Y-%m-%d %H:%M:%S')
+            end_date = datetime.strptime(actual_date + ' ' + schedule['end'] + ':00', '%Y-%m-%d %H:%M:%S')
 
-            if datetime.now() >= start_date and datetime.now() <= end_date:
+            if datetime.now() >= start_date and datetime.now() < end_date:
                 outputs.write('relay_1', 1)
             else:
                 outputs.write('relay_1', 0)

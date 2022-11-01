@@ -32,7 +32,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
     @octoprint.plugin.BlueprintPlugin.route('/audio/stop', methods=['GET'])
     def audio_stop(self):
         self.app.microphone.recording = False
-        return { 'result': True, 'file': self.app.microphone.video_file_name }
+        return { 'result': True, 'file': self.app.microphone.file_name }
     
     @octoprint.plugin.BlueprintPlugin.route('/image/feed', methods=['GET'])
     def image_feed(self):
@@ -50,7 +50,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
     @octoprint.plugin.BlueprintPlugin.route('/video/stop', methods=['GET'])
     def video_stop(self):
         self.app.camera.recording = False
-        return { 'result': True, 'file': self.app.camera.video_file_name }
+        return { 'result': True, 'file': self.app.camera.file_name }
     
     @octoprint.plugin.BlueprintPlugin.route('/file', methods=['GET'])
     def file_get(self):

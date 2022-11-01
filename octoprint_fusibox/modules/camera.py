@@ -17,8 +17,9 @@ class Camera(object):
     last_access = 0
     camera = None
     recording = False
+    last_frame = 0
     video_writer = None
-    video_file_name = ''
+    file_name = ''
     
     def __init__(self, configs, basepath):
         self.configs = configs
@@ -61,10 +62,12 @@ class Camera(object):
             if not self.video_writer:
                 print('Starting the recording')
                 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-                self.video_file_name = self.configs['settings']['video_prefix']['value'] + '-' + now + '.avi'
-                self.video_writer = cv2.VideoWriter(self.basepath + '/files/video/' + self.video_file_name, cv2.VideoWriter_fourcc('M','J','P','G'), 2, (width, height))
+                self.file_name = self.configs['settings']['video_prefix']['value'] + '-' + now + '.avi'
+                self.video_writer = cv2.VideoWriter(self.basepath + '/files/video/' + self.file_name, cv2.VideoWriter_fourcc('M','J','P','G'), 7.5, (width, height))
             
-            self.video_writer.write(self.frame2)
+            if (time() - self.last_frame) > (1/30):
+                self.video_writer.write(self.frame2)
+                self.last_frame = time()
         else:
             if self.video_writer:
                 print('Stopping the recording')
@@ -95,9 +98,10 @@ class Camera(object):
             return
         
         with PiCamera() as cls.camera:
-            cls.camera.resolution = (320, 240)
+            cls.camera.resolution = (640, 480)
             cls.camera.hflip = True
             cls.camera.vflip = True
+            cls.camera.framerate = 30
             cls.camera.start_preview()
             sleep(1)
 
@@ -108,7 +112,7 @@ class Camera(object):
                 cls.frame = stream.read()
                 
                 stream.seek(0)
-                stream.truncate()
+                stream.truncate(0)
                 
                 cls.recording_routine()
                 

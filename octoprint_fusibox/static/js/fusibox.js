@@ -63,28 +63,64 @@ $(function() {
             }
         }
 
-        $('#panelMode').change(this.onChangePanelMode);
-        $('#relayMode').change(this.onChangeRelayMode);
-        $('#fanMode').change(this.onChangeFanMode);
+        this.fanTimerInputManual = data => {
+            if (data != 'manual') {
+                // $('#fanTimerInput').remove();
+                return;
+            }
+            
+            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" data-bind="value: settings.plugins.fusibox.fanTimeout" id="fanTimerInput">').insertAfter("#fanTimerSelect");
+            $('#fanTimerSelect').removeAttr('data-bind');
+        }
 
-        this.onSettingsShown = () => {
+        this.relayTimerInputManual = data => {
+            if (data != 'manual') {
+                // $('#relayTimerInput').remove();
+                return;
+            }
+
+            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" data-bind="value: settings.plugins.fusibox.relayTimeout" id="relayTimerInput">').insertAfter("#relayTimerSelect");
+            $('#relayTimerSelect').removeAttr('data-bind');
+        }
+
+        this.onSettingsShown = () => {            
             $('#panelMode').change();
             $('#relayMode').change();
             $('#fanMode').change();
+            $('#fanTimerSelect').change();
+            $('#relayTimerSelect').change();
+            
+            if ($('#relayTimerSelect option[value="' + this.settings['relay_timeout']['value'] + '"]').length == 0) {
+                $('<option value="' + Number(this.settings['relay_timeout']['value']) + '">' + (Number(this.settings['relay_timeout']['value']) / 3600000) + ' hours</option>').insertBefore('#relayTimerSelect>option:last-child');
+                $('#relayTimerSelect').val(Number(this.settings['relay_timeout']['value']));
+                $('#relayTimerSelect').change();
+            }
+            
+            if ($('#fanTimerSelect option[value="' + this.settings['fan_timeout']['value'] + '"]').length == 0) {
+                $('<option value="' + Number(this.settings['fan_timeout']['value']) + '">' + (Number(this.settings['fan_timeout']['value']) / 3600000) + ' hours</option>').insertBefore('#fanTimerSelect>option:last-child');
+                $('#fanTimerSelect').val(Number(this.settings['fan_timeout']['value']));
+                $('#fanTimerSelect').change();
+            }
         }
     
-        self.onStartup = () => {
+        this.onStartup = () => {
             $.get(PLUGIN_BASEURL  + 'fusibox/video/stop');
             $.get(PLUGIN_BASEURL  + 'fusibox/audio/stop');
         }
 
-        self.sendSettings = data => {
-            debugger;
+        this.sendSettings = data => {
             $.ajax({
                 method: 'POST',
                 url: PLUGIN_BASEURL  + 'fusibox/settings',
                 contentType: 'application/json',
                 data
+            });
+        }
+
+        this.weekdays = days => {
+            return days.map(item => {
+                letters = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+                return letters[item]
             });
         }
     
@@ -94,7 +130,7 @@ $(function() {
 
         this.onDataUpdaterPluginMessage = (plugin, message) => {
             if (plugin !== 'fusibox') return;
-            debugger;
+            if (typeof message === 'object') return;
 
             let obj = message.split('**').pop();
             let data = message.split('**').shift();
@@ -127,7 +163,7 @@ $(function() {
                         $('#fan-button').attr('title', 'Controlled by timer (' + this.msToTime(Number(this.settings['fan_timeout']['value'])) + ')');
                     } else if (this.settings['fan_mode']['value'] == 'schedule') {
                         $('#fan-button > span').html('&nbsp;<i class="fa fa-calendar"></i>');
-                        $('#fan-button').attr('title', 'Controlled by schedule (' + this.settings['fan_schedule']['start'] + ' -> ' + this.settings['fan_schedule']['end'] + ' - ' + this.settings['fan_schedule']['days'].sort() + ')');
+                        $('#fan-button').attr('title', 'Controlled by schedule (' + this.settings['fan_schedule']['start'] + ' -> ' + this.settings['fan_schedule']['end'] + ' - ' + this.weekdays(this.settings['fan_schedule']['days'].sort()) + ')');
                     } else if (this.settings['fan_mode']['value'] == 'temperature') {
                         $('#fan-button > span').html('&nbsp;<i class="fa fa-thermometer-full"></i>');
                         $('#fan-button').attr('title', 'Controlled by temperature (' + this.settings['fan_temperature']['max'] + ' ºC)');
@@ -148,7 +184,7 @@ $(function() {
                         $('#power-button').attr('title', 'Controlled by timer (' + this.msToTime(Number(this.settings['relay_timeout']['value'])) + ')');
                     } else if (this.settings['relay_mode']['value'] == 'schedule') {
                         $('#power-button > span').html('&nbsp;<i class="fa fa-calendar"></i>');
-                        $('#power-button').attr('title', 'Controlled by schedule (' + this.settings['relay_schedule']['start'] + ' -> ' + this.settings['relay_schedule']['end'] + ' - ' + this.settings['relay_schedule']['days'].sort() + ')');
+                        $('#power-button').attr('title', 'Controlled by schedule (' + this.settings['relay_schedule']['start'] + ' -> ' + this.settings['relay_schedule']['end'] + ' - ' + this.weekdays(this.settings['relay_schedule']['days'].sort()) + ')');
                     } else {
                         $('#power-button > span').html('');
                         $('#power-button').attr('title', 'Controlled by manual button');
@@ -260,12 +296,52 @@ $(function() {
         };
     
         this.onStartupComplete = () => {
+            console.log($('#fanTimerSelect').val());
+            $('#panelMode').change(this.onChangePanelMode);
+            $('#relayMode').change(this.onChangeRelayMode);
+            $('#fanMode').change(this.onChangeFanMode);
+
+            $('#relayTimerSelect').change(e => {
+                if (e.target.value !== '') {
+                    $('#relayTimerInput').hide();
+                    return;
+                }
+                $('#relayTimerInput').show();
+            });
+            
+            $('#fanTimerSelect').change(e => {
+                if (e.target.value !== '') {
+                    $('#fanTimerInput').hide();
+                    return;
+                }
+                $('#fanTimerInput').show();
+            });
+
+            $('#fanTimerInput').change(e => {
+                let value = e.target.value;
+                console.log(value);
+
+                $('<option value="' + (value * 3600000) + '">' + value + ' hours</option>').insertBefore('#fanTimerSelect>option:last-child');
+                $('#fanTimerSelect').val(value * 3600000);
+                $('#fanTimerSelect').change();
+            });
+            
+            $('#relayTimerInput').change(e => {
+                let value = e.target.value;
+                console.log(value);
+
+                $('<option value="' + (value * 3600000) + '">' + value + ' hours</option>').insertBefore('#relayTimerSelect>option:last-child');
+                $('#relayTimerSelect').val(value * 3600000);
+                $('#relayTimerSelect').change();
+            });
+
             setInterval(() => {
                 $.get(PLUGIN_BASEURL  + 'fusibox/outputs');
                 $.get(PLUGIN_BASEURL  + 'fusibox/sensors');
             }, 1000);
             
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
+
             setInterval(() => {
                 $.get(PLUGIN_BASEURL  + 'fusibox/settings');
             }, 2000);
@@ -274,9 +350,9 @@ $(function() {
         $("#camera-button").click(e => {
             e.target.disabled = true;
             if (Number(this.settings['camera']['value'])) {
-                self.sendSettings('{"camera":{"value":0}}');
+                this.sendSettings('{"camera":{"value":0}}');
             } else {
-                self.sendSettings('{"camera":{"value":1}}');
+                this.sendSettings('{"camera":{"value":1}}');
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
@@ -315,9 +391,9 @@ $(function() {
         $("#mic-button").click(e => {
             e.target.disabled = true;
             if (Number(this.settings['mic']['value'])) {
-                self.sendSettings('{"mic":{"value":0}}');
+                this.sendSettings('{"mic":{"value":0}}');
             } else {
-                self.sendSettings('{"mic":{"value":1}}');
+                this.sendSettings('{"mic":{"value":1}}');
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
@@ -325,9 +401,9 @@ $(function() {
         $("#light-button").click(e => {
             e.target.disabled = true;
             if (Number(this.outputs['led_panel']['value'])) {
-                self.sendSettings('{"panel_value":{"value":0}}');
+                this.sendSettings('{"panel_value":{"value":0}}');
             } else {
-                self.sendSettings('{"panel_value":{"value":1}}');
+                this.sendSettings('{"panel_value":{"value":1}}');
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
@@ -335,12 +411,12 @@ $(function() {
         $("#power-button").click(e => {
             e.target.disabled = true;
             if (this.settings['relay_mode'] && this.settings['relay_mode']['value'] == 'timer') {
-                self.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
             } else {
                 if (Number(this.outputs['relay_1']['value'])) {
-                    if (confirm('Are you sure?')) self.sendSettings('{"relay_value":{"value":0}}');
+                    if (confirm('Are you sure?')) this.sendSettings('{"relay_value":{"value":0}}');
                 } else {
-                    self.sendSettings('{"relay_value":{"value":1}}');
+                    this.sendSettings('{"relay_value":{"value":1}}');
                 }
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
@@ -349,13 +425,13 @@ $(function() {
         $("#fan-button").click(e => {
             e.target.disabled = true;
             if (this.settings['fan_mode'] && this.settings['fan_mode']['value'] == 'timer') {
-                self.sendSettings('{"fan_timeout":{"started":' + ((new Date()).getTime() * (Number(Number(this.outputs['fan_1']['value']) || Number(this.outputs['fan_2']['value'])) * 0.1 || 1) / 1000) + '}}');
+                this.sendSettings('{"fan_timeout":{"started":' + ((new Date()).getTime() * (Number(Number(this.outputs['fan_1']['value']) || Number(this.outputs['fan_2']['value'])) * 0.1 || 1) / 1000) + '}}');
                 
             } else {
                 if (Number(this.outputs['fan_1']['value']) || Number(this.outputs['fan_2']['value'])) {
-                    self.sendSettings('{"fan_value":{"value":0}}');
+                    this.sendSettings('{"fan_value":{"value":0}}');
                 } else {
-                    self.sendSettings('{"fan_value":{"value":1}}');
+                    this.sendSettings('{"fan_value":{"value":1}}');
                 }
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
