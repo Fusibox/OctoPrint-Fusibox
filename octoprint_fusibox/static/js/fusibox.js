@@ -411,7 +411,11 @@ $(function() {
         $("#power-button").click(e => {
             e.target.disabled = true;
             if (this.settings['relay_mode'] && this.settings['relay_mode']['value'] == 'timer') {
-                this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                if (Number(this.outputs['relay_1']['value'])) {
+                    if (confirm('Are you sure?')) this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                } else {
+                    this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                }
             } else {
                 if (Number(this.outputs['relay_1']['value'])) {
                     if (confirm('Are you sure?')) this.sendSettings('{"relay_value":{"value":0}}');

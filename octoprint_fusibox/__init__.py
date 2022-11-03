@@ -194,67 +194,79 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
                  settings[internal_names[k]]['max'] = int(v)
             else:
                 settings[internal_names[k]]['value'] = v if not type(v) is bool else int(v)
-                
-        self._plugin_manager.send_plugin_message(self._identifier, dict(type='error', msg='Invalid JSON for Webhooks OAUTH DATA Settings'))
-
 
     def get_settings_defaults(self):
-        return dict(
-            panelCamera=True,
-            panelMode='manual',
-            panelDistance='0-10',
-            panelTimeout='3000',
-            relayMode='manual',
-            relayScheduleTimeStart='00:00',
-            relayScheduleTimeEnd='23:59',
-            relayScheduleDayMon=True,
-            relayScheduleDayTue=True,
-            relayScheduleDayWed=True,
-            relayScheduleDayThu=True,
-            relayScheduleDayFri=True,
-            relayScheduleDaySat=True,
-            relayScheduleDaySun=True,
-            relayTimeout=3000,
-            fanMode='manual',
-            fanTemperatureMax=70,
-            fanScheduleTimeStart='00:00',
-            fanScheduleTimeEnd='23:59',
-            fanScheduleDayMon=True,
-            fanScheduleDayTue=True,
-            fanScheduleDayWed=True,
-            fanScheduleDayThu=True,
-            fanScheduleDayFri=True,
-            fanScheduleDaySat=True,
-            fanScheduleDaySun=True,
-            fanTimeout=3000,
-            fan1=True,
-            fan2=True,
-            videoPrefix='fusibox-video',
-            audioPrefix='fusibox-audio',
-            imagePrefix='fusibox-image',
-            videoRecording=False,
-            audioRecording=False
-        )
+        return {
+            'panelCamera': True,
+            'panelMode': 'manual',
+            'panelDistance': '0-10',
+            'panelTimeout': '3000',
+            'relayMode': 'manual',
+            'relayScheduleTimeStart': '00:00',
+            'relayScheduleTimeEnd': '23:59',
+            'relayScheduleDayMon': True,
+            'relayScheduleDayTue': True,
+            'relayScheduleDayWed': True,
+            'relayScheduleDayThu': True,
+            'relayScheduleDayFri': True,
+            'relayScheduleDaySat': True,
+            'relayScheduleDaySun': True,
+            'relayTimeout': 3000,
+            'fanMode': 'manual',
+            'fanTemperatureMax': 70,
+            'fanScheduleTimeStart': '00:00',
+            'fanScheduleTimeEnd': '23:59',
+            'fanScheduleDayMon': True,
+            'fanScheduleDayTue': True,
+            'fanScheduleDayWed': True,
+            'fanScheduleDayThu': True,
+            'fanScheduleDayFri': True,
+            'fanScheduleDaySat': True,
+            'fanScheduleDaySun': True,
+            'fanTimeout': 3000,
+            'fan1': True,
+            'fan2': True,
+            'videoPrefix': 'fusibox-video',
+            'audioPrefix': 'fusibox-audio',
+            'imagePrefix': 'fusibox-image',
+            'videoRecording': False,
+            'audioRecording': False
+        }
 
     def get_template_configs(self):
         return [
-            dict(type='navbar', custom_bindings=False),
-            dict(type='settings', custom_bindings=False)
+            { 'type': 'navbar', 'custom_bindings': False },
+            { 'type': 'settings', 'custom_bindings': False }
         ]
         
     def get_assets(self):
-        return dict(
-            js=['js/fusibox.js'],
-            css=['css/fusibox.css']
-        )
-
-    def on_startup(self, host, port):
-        pass
+        return {
+            'js': ['js/fusibox.js'],
+            'css': ['css/fusibox.css']
+        }
         
     def route_hook(self, server_routes, *args, **kwargs):
         return [
             (r'/video/feed/(.*)', streamHandler.StreamHandler, { 'camera': self.app.camera })
         ]
+        
+    def get_update_information(self):
+        return {
+            'fusibox': {
+                'displayName': 'FusiBox',
+                'displayVersion': self._plugin_version,
+                'type': 'github_release',
+                'current': self._plugin_version,
+                'user': 'hm1996',
+                'repo': 'OctoPrint-Fusibox',
+                'pip': 'https://github.com/Fusibox/OctoPrint-Fusibox/archive/{target}.zip',
+                'stable_branch': {
+                    'name': 'Stable',
+                    'branch': 'main',
+                    'comittish': 'main'
+                }
+            }
+        }
 
 __plugin_name__ = 'FusiBox'
 __plugin_pythoncompat__ = '>=3.6'
@@ -265,5 +277,6 @@ def __plugin_load__():
     
     __plugin_implementation__ = FusiBoxPlugin(configs)
     __plugin_hooks__ = {
-        'octoprint.server.http.routes': __plugin_implementation__.route_hook
+        'octoprint.server.http.routes': __plugin_implementation__.route_hook,
+        'octoprint.plugin.softwareupdate.check_config': __plugin_implementation__.get_update_information
     }
