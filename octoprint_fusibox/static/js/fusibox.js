@@ -133,8 +133,8 @@ $(function() {
 
             if (message.type === 'setup') {
                 if (message.status === 'completed') {
-                    self.setupCompleted(true);
-                    self.setupInProgress(true);
+                    this.setupCompleted(true);
+                    this.setupInProgress(true);
                 }
             }
 
@@ -449,7 +449,7 @@ $(function() {
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
 
-        self.onBeforeWizardFinish = function () {   
+        this.onBeforeWizardFinish = function () {   
             if (!$("#wizard_plugin_fusibox").length) {
                 return;
             }

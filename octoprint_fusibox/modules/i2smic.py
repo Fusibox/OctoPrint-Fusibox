@@ -39,5 +39,4 @@ def main():
     shell.run_command("sed -i -e 's/#dtparam=i2s/dtparam=i2s/g' /boot/config.txt")
 
 def run():
-    shell.require_root()
     main()

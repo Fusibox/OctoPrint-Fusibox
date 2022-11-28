@@ -5,11 +5,11 @@
             <h3>{{ _("Requirements setup") }}</h3>
         </div>
         <div class="modal-body">
-            <div id="WS_OS_CONFIG_TEST">
+            <div id="FB_SETUP">
                 <p>
                     {{ _('This runs a script that install all requirements needed to make this plugin work') }}.
                 </p>
-                <button class="btn btn-primary" id="ws_os_config_run" data-bind="click: runConfigTest, enable: !setupInProgress()">
+                <button class="btn btn-primary" data-bind="click: runConfigTest, enable: !setupInProgress()">
                     <i data-bind="css: { 'fas-custom fa-custom-running': !setupInProgress(), 'fa fa-spin fa-spinner': setupInProgress() }"></i>
                     {{ _('Run Setup') }}
                 </button>

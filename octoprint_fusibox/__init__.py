@@ -150,8 +150,8 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
     
     @octoprint.plugin.BlueprintPlugin.route('/setup/start', methods=['GET'])
     def setup_get(self):
-        from modules.i2smic import run
-        run()
+        from .modules import i2smic
+        #i2smic.run()
         self._plugin_manager.send_plugin_message(self._identifier, { 'type': 'setup', 'status': 'completed'})
         return ''
     
@@ -162,9 +162,12 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
         if not os.path.exists('/etc/modprobe.d/snd-i2smic-rpi.conf'):
             return True
         
+        content = ''
         with open('/etc/modprobe.d/snd-i2smic-rpi.conf') as f:
-            if not 'options snd-i2smic-rpi rpi_platform_generation=2' in f.read():
-                return True
+            content = f.read()
+            
+        if not 'options snd-i2smic-rpi rpi_platform_generation=2' in content:
+            return True
             
         return False
     
@@ -230,7 +233,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
 
     def get_settings_defaults(self):
         return {
-            'panelCamera': True,
+            'panelCamera': False,
             'panelMode': 'manual',
             'panelDistance': '0-10',
             'panelTimeout': '7200000',

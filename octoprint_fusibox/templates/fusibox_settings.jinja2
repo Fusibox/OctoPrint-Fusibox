@@ -92,7 +92,7 @@
                     <option value="36000000">10 {{ _('hours') }}</option>
                     <option value="">Manual</option>
                 </select>
-                <input style="margin-left: 10px; width: 30%;" type="number" data-bind="attr: { placeholder: gettext('Insert the timeout value') }" id="relayTimerInput">
+                <input style="margin-left: 10px; width: 30%;" type="number" id="relayTimerInput">
                 <span class="help-inline">{{ _('The timeout describes the power supply will be ON after an activation') }}.</span>
             </div>
         </div>
@@ -164,7 +164,7 @@
                     <option value="36000000">10 {{ _('hours') }}</option>
                     <option value="">Manual</option>
                 </select>
-                <input style="margin-left: 10px; width: 30%;" type="number" id="fanTimerInput" data-bind="attr { placeholder: gettext('Insert the timeout value') }">
+                <input style="margin-left: 10px; width: 30%;" type="number" id="fanTimerInput">
                 <span class="help-inline">{{ _('The timeout describes the time that the fan cooler will be ON after an activation') }}.</span>
             </div>
         </div>
