@@ -1,0 +1,394 @@
+# English translations for FusiBox.
+# Copyright (C) 2022 The OctoPrint Project
+# This file is distributed under the same license as the FusiBox project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FusiBox 0.1.0\n"
+"Report-Msgid-Bugs-To: i18n@octoprint.org\n"
+"POT-Creation-Date: 2022-11-27 23:09-0500\n"
+"PO-Revision-Date: 2022-11-27 23:11-0500\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: octoprint_fusibox/static/js/fusibox.js:73
+#: octoprint_fusibox/static/js/fusibox.js:84
+msgid "Insert the timeout value"
+msgstr "Insert the timeout value"
+
+#: octoprint_fusibox/static/js/fusibox.js:96
+#: octoprint_fusibox/static/js/fusibox.js:102
+#: octoprint_fusibox/static/js/fusibox.js:334
+#: octoprint_fusibox/static/js/fusibox.js:343
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:89
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:90
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:91
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:92
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:161
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:162
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:163
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:164
+msgid "hours"
+msgstr "hours"
+
+#: octoprint_fusibox/static/js/fusibox.js:158
+msgid "Controlled by distance"
+msgstr "Controlled by distance"
+
+#: octoprint_fusibox/static/js/fusibox.js:161
+#: octoprint_fusibox/static/js/fusibox.js:182
+#: octoprint_fusibox/static/js/fusibox.js:200
+msgid "Controlled by manual button"
+msgstr "Controlled by manual button"
+
+#: octoprint_fusibox/static/js/fusibox.js:173
+#: octoprint_fusibox/static/js/fusibox.js:194
+msgid "Controlled by timer"
+msgstr "Controlled by timer"
+
+#: octoprint_fusibox/static/js/fusibox.js:176
+#: octoprint_fusibox/static/js/fusibox.js:197
+msgid "Controlled by schedule"
+msgstr "Controlled by schedule"
+
+#: octoprint_fusibox/static/js/fusibox.js:179
+msgid "Controlled by temperature"
+msgstr "Controlled by temperature"
+
+#: octoprint_fusibox/static/js/fusibox.js:425
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+#: octoprint_fusibox/static/js/fusibox.js:460
+msgid "Restart needed!"
+msgstr "Restart needed!"
+
+#: octoprint_fusibox/static/js/fusibox.js:461
+msgid "FusiBox configuration complete. You will need to restart your Pi for the changes to take effect."
+msgstr "FusiBox configuration complete. You will need to restart your Pi for the changes to take effect."
+
+#: octoprint_fusibox/templates/fusibox.jinja2:5
+msgid "Requirements setup"
+msgstr "Requirements setup"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:10
+msgid "This runs a script that install all requirements needed to make this plugin work"
+msgstr "This runs a script that install all requirements needed to make this plugin work"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:14
+msgid "Run Setup"
+msgstr "Run Setup"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:18
+msgid "Setup in progress"
+msgstr "Setup in progress"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:19
+msgid "Running setup, this will take a couple of minutes"
+msgstr "Running setup, this will take a couple of minutes"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:23
+msgid "Setup completed! Please reboot the Raspberry to finish the process"
+msgstr "Setup completed! Please reboot the Raspberry to finish the process"
+
+#: octoprint_fusibox/templates/fusibox.jinja2:28
+msgid "Close"
+msgstr "Close"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:1
+msgid "FusiBox Plugin Settings"
+msgstr "FusiBox Plugin Settings"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:4
+msgid "Main light"
+msgstr "Main light"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:8
+msgid "Turn on when the camera is on?"
+msgstr "Turn on when the camera is on?"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:13
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:48
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:110
+msgid "Mode"
+msgstr "Mode"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:17
+msgid "Distance"
+msgstr "Distance"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:19
+msgid "This mode defines how the main light works"
+msgstr "This mode defines how the main light works"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:24
+msgid "Activation distance"
+msgstr "Activation distance"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:33
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:158
+msgid "Activation timeout"
+msgstr "Activation timeout"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:36
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:37
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:38
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:39
+msgid "sec"
+msgstr "sec"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:41
+msgid "The timeout describes the time that the main light will be ON after an activation"
+msgstr "The timeout describes the time that the main light will be ON after an activation"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:52
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:115
+msgid "Schedule"
+msgstr "Schedule"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:53
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:116
+msgid "Timer"
+msgstr "Timer"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:55
+msgid "This mode defines how the power supply works"
+msgstr "This mode defines how the power supply works"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:60
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:132
+msgid "Start time"
+msgstr "Start time"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:66
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:138
+msgid "End time"
+msgstr "End time"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:72
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:144
+msgid "Week days"
+msgstr "Week days"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:74
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:146
+msgid "Mon"
+msgstr "Mon"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:75
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:147
+msgid "Tue"
+msgstr "Tue"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:76
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:148
+msgid "Wed"
+msgstr "Wed"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:77
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:149
+msgid "Thu"
+msgstr "Thu"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:78
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:150
+msgid "Fri"
+msgstr "Fri"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:79
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:151
+msgid "Sat"
+msgstr "Sat"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:80
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:152
+msgid "Sun"
+msgstr "Sun"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:96
+msgid "The timeout describes the power supply will be ON after an activation"
+msgstr "The timeout describes the power supply will be ON after an activation"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:103
+msgid "Fan selection"
+msgstr "Fan selection"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:114
+msgid "Temperature"
+msgstr "Temperature"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:118
+msgid "This mode defines how the fan cooler works"
+msgstr "This mode defines how the fan cooler works"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:123
+msgid "Max. temperature"
+msgstr "Max. temperature"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:126
+msgid "The maximum temperature describes the allowed maximum temperature that the fan cooler need to be activated"
+msgstr "The maximum temperature describes the allowed maximum temperature that the fan cooler need to be activated"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:168
+msgid "The timeout describes the time that the fan cooler will be ON after an activation"
+msgstr "The timeout describes the time that the fan cooler will be ON after an activation"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:174
+msgid "Video files prefix"
+msgstr "Video files prefix"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:181
+msgid "Image files prefix"
+msgstr "Image files prefix"
+
+#: octoprint_fusibox/templates/fusibox_settings.jinja2:188
+msgid "Audio files prefix"
+msgstr "Audio files prefix"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "End"
+msgstr "End"
+
+msgid "Monday"
+msgstr "Monday"
+
+msgid "Tuesday"
+msgstr "Tuesday"
+
+msgid "Wednesday"
+msgstr "Wednesday"
+
+msgid "Thursday"
+msgstr "Thursday"
+
+msgid "Friday"
+msgstr "Friday"
+
+msgid "Saturday"
+msgstr "Saturday"
+
+msgid "Sunday"
+msgstr "Sunday"
+
+msgid "Fan 1"
+msgstr "Fan 1"
+
+msgid "Fan 2"
+msgstr "Fan 2"
+
+msgid "Max Temp"
+msgstr "Max Temp"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:17
+msgid "Camera"
+msgstr "Camera"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:33
+msgid "Microphone"
+msgstr "Microphone"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:40
+msgid "Main Light"
+msgstr "Main Light"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:41
+msgid "Power Supply"
+msgstr "Power Supply"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:42
+msgid "Fan Cooler"
+msgstr "Fan Cooler"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:46
+msgid "Files management"
+msgstr "Files management"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:53
+msgid "Name"
+msgstr "Name"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:53
+msgid "Type"
+msgstr "Type"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:53
+msgid "Size"
+msgstr "Size"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:66
+msgid "Refresh"
+msgstr "Refresh"
+
+#: octoprint_fusibox/templates/fusibox_tab.jinja2:69
+msgid "Delete"
+msgstr "Delete"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:1
+msgid "FusiBox Setup"
+msgstr "FusiBox Setup"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:2
+msgid "Thank you for installing Fusibox"
+msgstr "Thank you for installing Fusibox"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:3
+msgid "This plugin requires some libraries setup before it will work properly"
+msgstr "This plugin requires some libraries setup before it will work properly"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:5
+msgid "All libraries that need to be installed can be found"
+msgstr "All libraries that need to be installed can be found"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:5
+msgid "here"
+msgstr "here"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:10
+msgid "Wiring/assembling your FusiBox"
+msgstr "Wiring/assembling your FusiBox"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:13
+msgid "The most important part! Make sure you have everything wired and assembled correctly"
+msgstr "The most important part! Make sure you have everything wired and assembled correctly"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:16
+msgid "See"
+msgstr "See"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:17
+msgid "First Steps"
+msgstr "First Steps"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:18
+msgid "for more information"
+msgstr "for more information"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:22
+msgid "Requirements Setup"
+msgstr "Requirements Setup"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:26
+msgid "The requirements setup will help you to configure your Raspberry Pi for use with this plugin"
+msgstr "The requirements setup will help you to configure your Raspberry Pi for use with this plugin"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:30
+msgid "Start requirements setup"
+msgstr "Start requirements setup"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:34
+msgid "Reboot your Pi"
+msgstr "Reboot your Pi"
+
+#: octoprint_fusibox/templates/fusibox_wizard.jinja2:37
+msgid "Once you have made any necessary OS configuration changes, a reboot of the Pi is required. End the wizard, then hit reboot"
+msgstr "Once you have made any necessary OS configuration changes, a reboot of the Pi is required. End the wizard, then hit reboot"
+

@@ -1,6 +1,6 @@
 import sys
 import random
-import logging
+
 testMode = True
 
 if sys.platform != 'win32':

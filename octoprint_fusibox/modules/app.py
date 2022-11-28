@@ -6,6 +6,8 @@ from .sensors import Sensors
 from .database import Database
 from .microphone import Microphone
 
+import os
+
 class App():
     pcs = set()
     configs = {}
@@ -27,6 +29,12 @@ class App():
         self.data = {}
         self.outputs = Outputs(self.configs)
         self.sensors = Sensors(self.configs)
+        
+        if not os.path.isdir(basepath + '/files/'):
+            os.makedirs(basepath + '/files/')
+            os.makedirs(basepath + '/files/image/')
+            os.makedirs(basepath + '/files/audio/')
+            os.makedirs(basepath + '/files/video/')
 
         jobs = Jobs()
         jobs.new(services.fans, 'Fans', 1, [self.data, self.configs, self.outputs]).execute()

@@ -76,8 +76,8 @@ configs = {
             'options': ['0-10', '10-20']
         },
         'panel_timeout': {
-            'initial_value': 3000,
-            'value': 3000
+            'initial_value': 7200000,
+            'value': 7200000
         },
         'panel_value': {
             'initial_value': 0,
@@ -98,8 +98,8 @@ configs = {
             'days': [0, 1, 2, 3, 4, 5, 6]
         },
         'relay_timeout': {
-            'initial_value': 3000,
-            'value': 3000
+            'initial_value': 7200000,
+            'value': 7200000
         },
         'relay_mode': {
             'initial_value': 'manual',
@@ -120,8 +120,8 @@ configs = {
             'days': [0, 1, 2, 3, 4, 5, 6]
         },
         'fan_timeout': {
-            'initial_value': 3000,
-            'value': 3000
+            'initial_value': 7200000,
+            'value': 7200000
         },
         'fan_mode': {
             'initial_value': 'manual',

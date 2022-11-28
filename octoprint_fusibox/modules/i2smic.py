@@ -37,7 +37,6 @@ def main():
         "options snd-i2smic-rpi rpi_platform_generation={}".format(pimodel_select)
     )
     shell.run_command("sed -i -e 's/#dtparam=i2s/dtparam=i2s/g' /boot/config.txt")
-    shell.reboot()
 
 def run():
     shell.require_root()

@@ -1,27 +1,27 @@
-<h3>FusiBox Plugin Settings &nbsp; | &nbsp; <span class="temperature">Temp: <span id="temperature2"></span> °C</span>&nbsp; - &nbsp;<span class="humidity">Hum: <span id="humidity2"></span> %</span></h3> 
+<h3>{{ _('FusiBox Plugin Settings') }} &nbsp; | &nbsp; <span class="temperature">Temp: <span id="temperature2"></span> °C</span>&nbsp; - &nbsp;<span class="humidity">Hum: <span id="humidity2"></span> %</span></h3> 
 <hr>
 <form class="form-horizontal">
-    <h4>Main light</h4>
+    <h4>{{ _('Main light') }}</h4>
     <div class="control-group">
         <div class="controls">
             <label class="checkbox">
-                <input type="checkbox" data-bind="checked: settings.plugins.fusibox.panelCamera"> Turn on when the camera is on?
+                <input type="checkbox" data-bind="checked: settings.plugins.fusibox.panelCamera"> {{ _('Turn on when the camera is on?') }}
             </label>
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Mode:</label>
+        <label class="control-label">{{ _('Mode') }}:</label>
         <div class="controls">
             <select id="panelMode" data-bind="value: settings.plugins.fusibox.panelMode">
                 <option value="manual">Manual</option>
-                <option value="distance">Distance</option>
+                <option value="distance">{{ _('Distance') }}</option>
             </select>
-            <span class="help-inline">This mode defines how the main light works.</span>
+            <span class="help-inline">{{ _('This mode defines how the main light works') }}.</span>
         </div>
     </div>
     <div id="panelDistanceGroup" data-bind="visible: false">
         <div class="control-group">
-            <label class="control-label">Activation distance:</label>
+            <label class="control-label">{{ _('Activation distance') }}:</label>
             <div class="controls">
                 <select data-bind="value: settings.plugins.fusibox.panelDistance">
                     <option value="0-10">0-10 cm</option>
@@ -30,54 +30,54 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">Activation timeout:</label>
+            <label class="control-label">{{ _('Activation timeout') }}:</label>
             <div class="controls">
                 <select data-bind="value: settings.plugins.fusibox.panelTimeout">
-                    <option value="15000">15 sec</option>
-                    <option value="30000">30 sec</option>
-                    <option value="60000">60 sec</option>
-                    <option value="120000">120 sec</option>
+                    <option value="15000">15 {{ _('sec') }}</option>
+                    <option value="30000">30 {{ _('sec') }}</option>
+                    <option value="60000">60 {{ _('sec') }}</option>
+                    <option value="120000">120 {{ _('sec') }}</option>
                 </select>
-                <span class="help-inline">The timeout describes the time that the main light will be ON after an activation.</span>
+                <span class="help-inline">{{ _('The timeout describes the time that the main light will be ON after an activation') }}.</span>
             </div>
         </div>
     </div>
     <br/>
-    <h4>Power supply</h4>
+    <h4>{{ _('Power Supply') }}</h4>
     <div class="control-group">
-        <label class="control-label">Mode:</label>
+        <label class="control-label">{{ _('Mode') }}:</label>
         <div class="controls">
             <select id="relayMode" data-bind="value: settings.plugins.fusibox.relayMode">
                 <option value="manual">Manual</option>
-                <option value="schedule">Schedule</option>
-                <option value="timer">Timer</option>
+                <option value="schedule">{{ _('Schedule') }}</option>
+                <option value="timer">{{ _('Timer') }}</option>
             </select>
-            <span class="help-inline">This mode defines how the power supply works.</span>
+            <span class="help-inline">{{ _('This mode defines how the power supply works') }}.</span>
         </div>
     </div>
     <div id="relayScheduleGroup" data-bind="visible: false">
         <div class="control-group">
-            <label class="control-label">Start time:</label>
+            <label class="control-label">{{ _('Start time') }}:</label>
             <div class="controls">
-                <input type="time" title="Start" data-bind="value: settings.plugins.fusibox.relayScheduleTimeStart">
+                <input type="time" data-bind="value: settings.plugins.fusibox.relayScheduleTimeStart, attr: { title: gettext('Start') }">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">End time:</label>
+            <label class="control-label">{{ _('End time') }}:</label>
             <div class="controls">
-                <input type="time" title="End" data-bind="value: settings.plugins.fusibox.relayScheduleTimeEnd">
+                <input type="time" data-bind="value: settings.plugins.fusibox.relayScheduleTimeEnd, attr: { title: gettext('End') }">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">Week days:</label>
+            <label class="control-label">{{ _('Week days') }}:</label>
             <div class="controls">
-                <input type="checkbox" id="relayWeekday0" title="Monday" data-bind="checked: settings.plugins.fusibox.relayScheduleDayMon"> Mon
-                <input type="checkbox" id="relayWeekday1" title="Tuesday" data-bind="checked: settings.plugins.fusibox.relayScheduleDayTue"> Tue
-                <input type="checkbox" id="relayWeekday2" title="Wednesday" data-bind="checked: settings.plugins.fusibox.relayScheduleDayWed"> Wed
-                <input type="checkbox" id="relayWeekday3" title="Thursday" data-bind="checked: settings.plugins.fusibox.relayScheduleDayThu"> Thu
-                <input type="checkbox" id="relayWeekday4" title="Friday" data-bind="checked: settings.plugins.fusibox.relayScheduleDayFri"> Fri
-                <input type="checkbox" id="relayWeekday5" title="Saturday" data-bind="checked: settings.plugins.fusibox.relayScheduleDaySat"> Sat
-                <input type="checkbox" id="relayWeekday6" title="Sunday" data-bind="checked: settings.plugins.fusibox.relayScheduleDaySun"> Sun
+                <input type="checkbox" id="relayWeekday0" data-bind="checked: settings.plugins.fusibox.relayScheduleDayMon, attr: { title: gettext('Monday') }"> {{ _('Mon') }}
+                <input type="checkbox" id="relayWeekday1" data-bind="checked: settings.plugins.fusibox.relayScheduleDayTue, attr: { title: gettext('Tuesday') }"> {{ _('Tue') }}
+                <input type="checkbox" id="relayWeekday2" data-bind="checked: settings.plugins.fusibox.relayScheduleDayWed, attr: { title: gettext('Wednesday') }"> {{ _('Wed') }}
+                <input type="checkbox" id="relayWeekday3" data-bind="checked: settings.plugins.fusibox.relayScheduleDayThu, attr: { title: gettext('Thursday') }"> {{ _('Thu') }}
+                <input type="checkbox" id="relayWeekday4" data-bind="checked: settings.plugins.fusibox.relayScheduleDayFri, attr: { title: gettext('Friday') }"> {{ _('Fri') }}
+                <input type="checkbox" id="relayWeekday5" data-bind="checked: settings.plugins.fusibox.relayScheduleDaySat, attr: { title: gettext('Saturday') }"> {{ _('Sat') }}
+                <input type="checkbox" id="relayWeekday6" data-bind="checked: settings.plugins.fusibox.relayScheduleDaySun, attr: { title: gettext('Sunday') }"> {{ _('Sun') }}
             </div>
         </div>
     </div>
@@ -86,106 +86,106 @@
             <label class="control-label">Activation timeout:</label>
             <div class="controls">
                 <select id="relayTimerSelect" data-bind="value: settings.plugins.fusibox.relayTimeout, valueAllowUnset: true">
-                    <option value="7200000">2 hours</option>
-                    <option value="14400000">4 hours</option>
-                    <option value="28800000">8 hours</option>
-                    <option value="36000000">10 hours</option>
+                    <option value="7200000">2 {{ _('hours') }}</option>
+                    <option value="14400000">4 {{ _('hours') }}</option>
+                    <option value="28800000">8 {{ _('hours') }}</option>
+                    <option value="36000000">10 {{ _('hours') }}</option>
                     <option value="">Manual</option>
                 </select>
-                <input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" id="relayTimerInput">
-                <span class="help-inline">The timeout describes the power supply will be ON after an activation.</span>
+                <input style="margin-left: 10px; width: 30%;" type="number" data-bind="attr: { placeholder: gettext('Insert the timeout value') }" id="relayTimerInput">
+                <span class="help-inline">{{ _('The timeout describes the power supply will be ON after an activation') }}.</span>
             </div>
         </div>
     </div>
     <br/>
-    <h4>Fan cooler</h4>
+    <h4>{{ _('Fan Cooler') }}</h4>
     <div class="control-group">
-        <label class="control-label">Fan selection:</label>
+        <label class="control-label">{{ _('Fan selection') }}:</label>
         <div class="controls">
-            1: <input type="checkbox" id="fan1" title="Fan 1" data-bind="checked: settings.plugins.fusibox.fan1">
-            &nbsp; 2: <input type="checkbox" id="fan2" title="Fan 2" data-bind="checked: settings.plugins.fusibox.fan2">
+            1: <input type="checkbox" id="fan1" data-bind="checked: settings.plugins.fusibox.fan1, attr: { title: gettext('Fan 1') }">
+            &nbsp; 2: <input type="checkbox" id="fan2" data-bind="checked: settings.plugins.fusibox.fan2, attr: { title: gettext('Fan 2') }">
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Mode:</label>
+        <label class="control-label">{{ _('Mode') }}:</label>
         <div class="controls">
             <select id="fanMode" data-bind="value: settings.plugins.fusibox.fanMode">
                 <option value="manual">Manual</option>
-                <option value="temperature">Temperature</option>
-                <option value="schedule">Schedule</option>
-                <option value="timer">Timer</option>
+                <option value="temperature">{{ _('Temperature') }}</option>
+                <option value="schedule">{{ _('Schedule') }}</option>
+                <option value="timer">{{ _('Timer') }}</option>
             </select>
-            <span class="help-inline">This mode defines how the fan cooler works.</span>
+            <span class="help-inline">{{ _('This mode defines how the fan cooler works') }}.</span>
         </div>
     </div>
     <div id="fanTemperatureGroup" data-bind="visible: false">
         <div class="control-group">
-            <label class="control-label">Max. temperature:</label>
+            <label class="control-label">{{ _('Max. temperature') }}:</label>
             <div class="controls">
-                <input type="number" placeholder="Max Temp" title="Max Temp" data-bind="value: settings.plugins.fusibox.fanTemperatureMax">
-                <span class="help-inline">The maximum temperature describes the allowed maximum temperature that the fan cooler need to be activated.</span>
+                <input type="number" data-bind="value: settings.plugins.fusibox.fanTemperatureMax, attr: { title: gettext('Max Temp'), placeholder: gettext('Max Temp') }">
+                <span class="help-inline">{{ _('The maximum temperature describes the allowed maximum temperature that the fan cooler need to be activated') }}.</span>
             </div>
         </div>
     </div>
     <div id="fanScheduleGroup" data-bind="visible: false">
         <div class="control-group">
-            <label class="control-label">Start time:</label>
+            <label class="control-label">{{ _('Start time') }}:</label>
             <div class="controls">
-                <input type="time" title="Start" data-bind="value: settings.plugins.fusibox.fanScheduleTimeStart">
+                <input type="time" data-bind="value: settings.plugins.fusibox.fanScheduleTimeStart, attr: { title: gettext('Start') }">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">End time:</label>
+            <label class="control-label">{{ _('End time') }}:</label>
             <div class="controls">
-                <input type="time" title="End" data-bind="value: settings.plugins.fusibox.fanScheduleTimeEnd">
+                <input type="time" data-bind="value: settings.plugins.fusibox.fanScheduleTimeEnd, attr: { title: gettext('End') }">
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">Week days:</label>
+            <label class="control-label">{{ _('Week days') }}:</label>
             <div class="controls">
-                <input type="checkbox" id="fanWeekday0" title="Monday" data-bind="checked: settings.plugins.fusibox.fanScheduleDayMon"> Mon
-                <input type="checkbox" id="fanWeekday1" title="Tuesday" data-bind="checked: settings.plugins.fusibox.fanScheduleDayTue"> Tue
-                <input type="checkbox" id="fanWeekday2" title="Wednesday" data-bind="checked: settings.plugins.fusibox.fanScheduleDayWed"> Wed
-                <input type="checkbox" id="fanWeekday3" title="Thursday" data-bind="checked: settings.plugins.fusibox.fanScheduleDayThu"> Thu
-                <input type="checkbox" id="fanWeekday4" title="Friday" data-bind="checked: settings.plugins.fusibox.fanScheduleDayFri"> Fri
-                <input type="checkbox" id="fanWeekday5" title="Saturday" data-bind="checked: settings.plugins.fusibox.fanScheduleDaySat"> Sat
-                <input type="checkbox" id="fanWeekday6" title="Sunday" data-bind="checked: settings.plugins.fusibox.fanScheduleDaySun"> Sun
+                <input type="checkbox" id="fanWeekday0" data-bind="checked: settings.plugins.fusibox.fanScheduleDayMon, attr: { title: gettext('Monday') }"> {{ _('Mon') }}
+                <input type="checkbox" id="fanWeekday1" data-bind="checked: settings.plugins.fusibox.fanScheduleDayTue, attr: { title: gettext('Tuesday') }"> {{ _('Tue') }}
+                <input type="checkbox" id="fanWeekday2" data-bind="checked: settings.plugins.fusibox.fanScheduleDayWed, attr: { title: gettext('Wednesday') }"> {{ _('Wed') }}
+                <input type="checkbox" id="fanWeekday3" data-bind="checked: settings.plugins.fusibox.fanScheduleDayThu, attr: { title: gettext('Thursday') }"> {{ _('Thu') }}
+                <input type="checkbox" id="fanWeekday4" data-bind="checked: settings.plugins.fusibox.fanScheduleDayFri, attr: { title: gettext('Friday') }"> {{ _('Fri') }}
+                <input type="checkbox" id="fanWeekday5" data-bind="checked: settings.plugins.fusibox.fanScheduleDaySat, attr: { title: gettext('Saturday') }"> {{ _('Sat') }}
+                <input type="checkbox" id="fanWeekday6" data-bind="checked: settings.plugins.fusibox.fanScheduleDaySun, attr: { title: gettext('Sunday') }"> {{ _('Sun') }}
             </div>
         </div>
     </div>
     <div id="fanTimerGroup" data-bind="visible: false">
         <div class="control-group">
-            <label class="control-label">Activation timeout:</label>
+            <label class="control-label">{{ _('Activation timeout') }}:</label>
             <div class="controls">
                 <select id="fanTimerSelect" data-bind="value: settings.plugins.fusibox.fanTimeout">
-                    <option value="7200000">2 hours</option>
-                    <option value="14400000">4 hours</option>
-                    <option value="28800000">8 hours</option>
-                    <option value="36000000">10 hours</option>
+                    <option value="7200000">2 {{ _('hours') }}</option>
+                    <option value="14400000">4 {{ _('hours') }}</option>
+                    <option value="28800000">8 {{ _('hours') }}</option>
+                    <option value="36000000">10 {{ _('hours') }}</option>
                     <option value="">Manual</option>
                 </select>
-                <input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" id="fanTimerInput">
-                <span class="help-inline">The timeout describes the time that the fan cooler will be ON after an activation.</span>
+                <input style="margin-left: 10px; width: 30%;" type="number" id="fanTimerInput" data-bind="attr { placeholder: gettext('Insert the timeout value') }">
+                <span class="help-inline">{{ _('The timeout describes the time that the fan cooler will be ON after an activation') }}.</span>
             </div>
         </div>
     </div>
-    <h4>Files management</h4>
+    <h4>{{ _('Files management') }}</h4>
     <div class="control-group">
-        <label class="control-label">Video files prefix:</label>
+        <label class="control-label">{{ _('Video files prefix') }}:</label>
         <div class="controls">
             <input type="text" placeholder="fusibox-video" onkeyup="event.target.value = event.target.value.split('.').join(''); $('#helpVideoPrefix').html(event.target.value == '' ? '' : event.target.value + '-DD-MM-AAAA H:m:s.mp4')" data-bind="value: settings.plugins.fusibox.videoPrefix" />
             <span class="help-inline" id="helpVideoPrefix"></span>
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Image files prefix:</label>
+        <label class="control-label">{{ _('Image files prefix') }}:</label>
         <div class="controls">
             <input type="text" placeholder="fusibox-image" onkeyup="event.target.value = event.target.value.split('.').join(''); $('#helpImagePrefix').html(event.target.value == '' ? '' : event.target.value + '-DD-MM-AAAA H:m:s.jpg')" data-bind="value: settings.plugins.fusibox.imagePrefix" />
             <span class="help-inline" id="helpImagePrefix"></span>
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">Audio files prefix:</label>
+        <label class="control-label">{{ _('Audio files prefix') }}:</label>
         <div class="controls">
             <input type="text" placeholder="fusibox-audio" onkeyup="event.target.value = event.target.value.split('.').join(''); $('#helpAudioPrefix').html(event.target.value == '' ? '' : event.target.value + '-DD-MM-AAAA H:m:s.mp3')" data-bind="value: settings.plugins.fusibox.audioPrefix" />
             <span class="help-inline" id="helpAudioPrefix"></span>

@@ -69,7 +69,7 @@ $(function() {
                 return;
             }
             
-            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" data-bind="value: settings.plugins.fusibox.fanTimeout" id="fanTimerInput">').insertAfter("#fanTimerSelect");
+            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="' + gettext('Insert the timeout value') + '" data-bind="value: settings.plugins.fusibox.fanTimeout" id="fanTimerInput">').insertAfter("#fanTimerSelect");
             $('#fanTimerSelect').removeAttr('data-bind');
         }
 
@@ -79,7 +79,7 @@ $(function() {
                 return;
             }
 
-            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="Insert the timeout value" data-bind="value: settings.plugins.fusibox.relayTimeout" id="relayTimerInput">').insertAfter("#relayTimerSelect");
+            $('<input style="margin-left: 10px; width: 30%;" type="number" placeholder="' + gettext('Insert the timeout value') + '" data-bind="value: settings.plugins.fusibox.relayTimeout" id="relayTimerInput">').insertAfter("#relayTimerSelect");
             $('#relayTimerSelect').removeAttr('data-bind');
         }
 
@@ -91,13 +91,13 @@ $(function() {
             $('#relayTimerSelect').change();
             
             if ($('#relayTimerSelect option[value="' + this.settings['relay_timeout']['value'] + '"]').length == 0) {
-                $('<option value="' + Number(this.settings['relay_timeout']['value']) + '">' + (Number(this.settings['relay_timeout']['value']) / 3600000) + ' hours</option>').insertBefore('#relayTimerSelect>option:last-child');
+                $('<option value="' + Number(this.settings['relay_timeout']['value']) + '">' + (Number(this.settings['relay_timeout']['value']) / 3600000) + ' ' + gettext('hours') + '</option>').insertBefore('#relayTimerSelect>option:last-child');
                 $('#relayTimerSelect').val(Number(this.settings['relay_timeout']['value']));
                 $('#relayTimerSelect').change();
             }
             
             if ($('#fanTimerSelect option[value="' + this.settings['fan_timeout']['value'] + '"]').length == 0) {
-                $('<option value="' + Number(this.settings['fan_timeout']['value']) + '">' + (Number(this.settings['fan_timeout']['value']) / 3600000) + ' hours</option>').insertBefore('#fanTimerSelect>option:last-child');
+                $('<option value="' + Number(this.settings['fan_timeout']['value']) + '">' + (Number(this.settings['fan_timeout']['value']) / 3600000) + ' ' + gettext('hours') + '</option>').insertBefore('#fanTimerSelect>option:last-child');
                 $('#fanTimerSelect').val(Number(this.settings['fan_timeout']['value']));
                 $('#fanTimerSelect').change();
             }
@@ -130,6 +130,14 @@ $(function() {
 
         this.onDataUpdaterPluginMessage = (plugin, message) => {
             if (plugin !== 'fusibox') return;
+
+            if (message.type === 'setup') {
+                if (message.status === 'completed') {
+                    self.setupCompleted(true);
+                    self.setupInProgress(true);
+                }
+            }
+
             if (typeof message === 'object') return;
 
             let obj = message.split('**').pop();
@@ -321,7 +329,7 @@ $(function() {
                 let value = e.target.value;
                 console.log(value);
 
-                $('<option value="' + (value * 3600000) + '">' + value + ' hours</option>').insertBefore('#fanTimerSelect>option:last-child');
+                $('<option value="' + (value * 3600000) + '">' + value + ' ' + gettext('hours') + '</option>').insertBefore('#fanTimerSelect>option:last-child');
                 $('#fanTimerSelect').val(value * 3600000);
                 $('#fanTimerSelect').change();
             });
@@ -330,7 +338,7 @@ $(function() {
                 let value = e.target.value;
                 console.log(value);
 
-                $('<option value="' + (value * 3600000) + '">' + value + ' hours</option>').insertBefore('#relayTimerSelect>option:last-child');
+                $('<option value="' + (value * 3600000) + '">' + value + ' ' + gettext('hours') + '</option>').insertBefore('#relayTimerSelect>option:last-child');
                 $('#relayTimerSelect').val(value * 3600000);
                 $('#relayTimerSelect').change();
             });
@@ -412,13 +420,13 @@ $(function() {
             e.target.disabled = true;
             if (this.settings['relay_mode'] && this.settings['relay_mode']['value'] == 'timer') {
                 if (Number(this.outputs['relay_1']['value'])) {
-                    if (confirm('Are you sure?')) this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                    if (confirm(gettext('Are you sure?'))) this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
                 } else {
                     this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
                 }
             } else {
                 if (Number(this.outputs['relay_1']['value'])) {
-                    if (confirm('Are you sure?')) this.sendSettings('{"relay_value":{"value":0}}');
+                    if (confirm(gettext('Are you sure?'))) this.sendSettings('{"relay_value":{"value":0}}');
                 } else {
                     this.sendSettings('{"relay_value":{"value":1}}');
                 }
@@ -440,6 +448,30 @@ $(function() {
             }
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
+
+        self.onBeforeWizardFinish = function () {   
+            if (!$("#wizard_plugin_fusibox").length) {
+                return;
+            }
+            
+            new PNotify({
+                title: gettext('Restart needed!'),
+                text: gettext('FusiBox configuration complete. You will need to restart your Pi for the changes to take effect.'),
+                type: 'success',
+                hide: false,
+            });
+        };
+
+        this.setupInProgress = ko.observable(false);
+        this.setupCompleted = ko.observable(false);
+
+        this.runConfigTest = () => {
+            console.log("Starting fusibox requirements setup...");
+            this.setupInProgress(true);
+            this.setupCompleted(false);
+
+            $.get(PLUGIN_BASEURL + 'fusibox/setup/start');
+        }
     }
 
     // This is how our plugin registers itthis with the application, by adding some configuration
@@ -449,4 +481,6 @@ $(function() {
         construct: FusiBoxViewModel,
         dependencies: ['settingsViewModel']
     });
+
+    
 });

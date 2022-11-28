@@ -1,6 +1,8 @@
 from json import dumps, loads
 from sqlite3 import connect
 
+import os
+
 class Database:
     connected = False
     file_name = 'db.db'
@@ -8,6 +10,9 @@ class Database:
     cursor = None
 
     def __init__(self, basepath):
+        if not os.path.isdir(basepath + '/database/'):
+            os.makedirs(basepath + '/database/')            
+            
         self.connection = None
         self.file_path = basepath + '/database/' + self.file_name
 

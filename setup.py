@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import sys
+
 ########################################################################################################################
 ### Do not forget to adjust the following variables to your own plugin.
 
@@ -27,14 +29,18 @@ plugin_author = "Humar Moreno"
 plugin_author_email = "contact@fusibox.es"
 
 # The plugin's homepage URL. Can be overwritten within OctoPrint's internal data via __plugin_url__ in the plugin module
-plugin_url = "https://github.com/hm1996/octoprint-fusibox"
+plugin_url = "https://github.com/Fusibox/OctoPrint-Fusibox"
 
 # The plugin's license. Can be overwritten within OctoPrint's internal data via __plugin_license__ in the plugin module
 plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
-plugin_requires = ["Adafruit_Blinka==8.2.0","adafruit_circuitpython_dht==3.7.7","Bluetin_Echo==0.2.0","board==1.0","Flask==1.1.2","picamera==1.13","pyaudio==0.2.12","setuptools==52.0.0","adafruit-python-shell==1.3.3","numpy","opencv-python-headless"]
-
+plugin_requires = ["setuptools","pyaudio","numpy","opencv-python-headless","Flask"]
+if sys.platform != 'win32':
+    plugin_requires.append("picamera")
+    plugin_requires.append("Bluetin_Echo","board")
+    plugin_requires.append("adafruit-python-shell")
+    plugin_requires.append("adafruit_circuitpython_dht")
 ### --------------------------------------------------------------------------------------------------------------------
 ### More advanced options that you usually shouldn't have to touch follow after this point
 ### --------------------------------------------------------------------------------------------------------------------

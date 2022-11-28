@@ -1,4 +1,5 @@
 import os
+import sys
 import octoprint.plugin
 
 from json import dumps
@@ -11,7 +12,8 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
                     octoprint.plugin.TemplatePlugin, 
                     octoprint.plugin.SettingsPlugin,
                     octoprint.plugin.AssetPlugin,
-                    octoprint.plugin.BlueprintPlugin):
+                    octoprint.plugin.BlueprintPlugin,
+                    octoprint.plugin.WizardPlugin):
     
     def __init__(self, configs):
         self.basepath = os.path.dirname(os.path.abspath(__file__))
@@ -146,6 +148,37 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
                     
         return ''
     
+    @octoprint.plugin.BlueprintPlugin.route('/setup/start', methods=['GET'])
+    def setup_get(self):
+        from modules.i2smic import run
+        run()
+        self._plugin_manager.send_plugin_message(self._identifier, { 'type': 'setup', 'status': 'completed'})
+        return ''
+    
+    def is_wizard_required(self):
+        if sys.platform == 'win32':
+            return False
+        
+        if not os.path.exists('/etc/modprobe.d/snd-i2smic-rpi.conf'):
+            return True
+        
+        with open('/etc/modprobe.d/snd-i2smic-rpi.conf') as f:
+            if not 'options snd-i2smic-rpi rpi_platform_generation=2' in f.read():
+                return True
+            
+        return False
+    
+    def get_wizard_details(self):
+        return {}
+    
+    def get_wizard_version(self):
+        return 1
+
+    def on_wizard_finish(self, handled):
+        self._logger.warning(
+            "You will need to restart your Pi for OS changes to take effect"
+        )
+    
     def on_after_startup(self):
         self._settings.set(['videoRecording'], False)
         self._settings.set(['audioRecording'], False)
@@ -200,7 +233,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
             'panelCamera': True,
             'panelMode': 'manual',
             'panelDistance': '0-10',
-            'panelTimeout': '3000',
+            'panelTimeout': '7200000',
             'relayMode': 'manual',
             'relayScheduleTimeStart': '00:00',
             'relayScheduleTimeEnd': '23:59',
@@ -211,7 +244,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
             'relayScheduleDayFri': True,
             'relayScheduleDaySat': True,
             'relayScheduleDaySun': True,
-            'relayTimeout': 3000,
+            'relayTimeout': 7200000,
             'fanMode': 'manual',
             'fanTemperatureMax': 70,
             'fanScheduleTimeStart': '00:00',
@@ -223,7 +256,7 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
             'fanScheduleDayFri': True,
             'fanScheduleDaySat': True,
             'fanScheduleDaySun': True,
-            'fanTimeout': 3000,
+            'fanTimeout': 7200000,
             'fan1': True,
             'fan2': True,
             'videoPrefix': 'fusibox-video',
@@ -257,14 +290,14 @@ class FusiBoxPlugin(octoprint.plugin.StartupPlugin,
                 'displayVersion': self._plugin_version,
                 'type': 'github_release',
                 'current': self._plugin_version,
-                'user': 'hm1996',
+                'user': 'Fusibox',
                 'repo': 'OctoPrint-Fusibox',
-                'pip': 'https://github.com/Fusibox/OctoPrint-Fusibox/archive/{target}.zip',
+                'pip': 'https://github.com/Fusibox/OctoPrint-Fusibox/archive/{target_version}.zip',
                 'stable_branch': {
                     'name': 'Stable',
                     'branch': 'main',
-                    'comittish': 'main'
-                }
+                    'comittish': ['main']
+                } 
             }
         }
 

@@ -1,0 +1,31 @@
+<div id="generic_plugin_fusibox">¡
+    <div id="FUSIBOX_REQUIREMENTS_SETUP" class="modal hide fade" style="min-height: 500px;">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal" aria-hidden="true">&times;</a>
+            <h3>{{ _("Requirements setup") }}</h3>
+        </div>
+        <div class="modal-body">
+            <div id="WS_OS_CONFIG_TEST">
+                <p>
+                    {{ _('This runs a script that install all requirements needed to make this plugin work') }}.
+                </p>
+                <button class="btn btn-primary" id="ws_os_config_run" data-bind="click: runConfigTest, enable: !setupInProgress()">
+                    <i data-bind="css: { 'fas-custom fa-custom-running': !setupInProgress(), 'fa fa-spin fa-spinner': setupInProgress() }"></i>
+                    {{ _('Run Setup') }}
+                </button>
+                <hr>
+                <div class="alert alert-info" data-bind="visible: setupInProgress()">
+                    <strong><i class="fa fa-spinner fa-spin"></i> {{ _('Setup in progress') }}</strong>
+                    <br>{{ _('Running setup, this will take a couple of minutes') }}</span>
+                </div>
+
+                <div class="alert alert-success" data-bind="visible: setupCompleted()">
+                    <strong>{{ _('Setup completed! Please reboot the Raspberry to finish the process') }}.</strong>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">{{ _('Close') }}</a>
+        </div>
+    </div>
+</div>

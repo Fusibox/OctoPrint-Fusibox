@@ -43,14 +43,14 @@
 </div>
 <br>
 <div class="row-fluid" id="files-container-all">
-    <h1 style="font-weight: bold"> {{_('Files management')}} </h1>
+    <h1 style="font-weight: bold"> {{ _('Files management') }} </h1>
 
     <div style="text-align: center">
         <div class="pull-left" style="width: 80%; border: black 2px;">
             <table id="files-container" style="max-width: 100%">
                 <thead>
                     <tr>
-                        <th></th><th>Name</th><th>Type</th><th>Size</th>
+                        <th></th><th>{{ _('Name') }}</th><th>{{ _('Type') }}</th><th>{{ _('Size') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,7 +82,7 @@
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|image|' + image.name + '"></td>' +
                         '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=image&name=' + image.name + '" target="_blank">' + image.name + '</a></td>' +
-                        '<td>Image</td>' +
+                        '<td>' + gettext('Image') + '</td>' +
                         '<td>' + image.size + 'KB</td>');
                     noData = false;
                 }
@@ -90,7 +90,7 @@
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|video|' + video.name + '"></td>' +
                         '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=video&name=' + video.name + '" target="_blank">' + video.name + '</a></td>' +
-                        '<td>Video</td>' +
+                        '<td>' + gettext('Video') + '</td>' +
                         '<td>' + video.size + 'KB</td>');
                     noData = false;
                 }
@@ -98,7 +98,7 @@
                     $('#files-container tbody').append('<tr>' +
                         '<td><input type="checkbox" class="file" id="file|audio|' + audio.name + '"></td>' +
                         '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=audio&name=' + audio.name + '" target="_blank">' + audio.name + '</a></td>' +
-                        '<td>Audio</td>' +
+                        '<td>' + gettext('Audio') + '</td>' +
                         '<td>' + audio.size + 'KB</td>');
                     noData = false;
                 }
