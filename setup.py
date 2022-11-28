@@ -16,7 +16,7 @@ plugin_package = "octoprint_fusibox"
 plugin_name = "FusiBox"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "0.1.2"
+plugin_version = "0.1.3"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
@@ -38,7 +38,8 @@ plugin_license = "AGPLv3"
 plugin_requires = ["setuptools","pyaudio","numpy","opencv-python-headless","Flask"]
 if sys.platform != 'win32':
     plugin_requires.append("picamera")
-    plugin_requires.append("Bluetin_Echo","board")
+    plugin_requires.append("Bluetin_Echo")
+    plugin_requires.append("board")
     plugin_requires.append("adafruit-python-shell")
     plugin_requires.append("adafruit_circuitpython_dht")
 ### --------------------------------------------------------------------------------------------------------------------
