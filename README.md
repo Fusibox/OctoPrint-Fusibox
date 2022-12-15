@@ -1,1 +1,1 @@
-# octoprint-fusebox
+# octoprint-fusibox
