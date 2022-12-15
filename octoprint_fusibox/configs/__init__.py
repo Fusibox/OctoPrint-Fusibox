@@ -66,8 +66,8 @@ configs = {
     },
     'settings': {
         'panel_camera': {
-            'initial_value': 0,
-            'value': 0,
+            'initial_value': 1,
+            'value': 1,
             'options': [0, 1]
         },
         'panel_distance': {

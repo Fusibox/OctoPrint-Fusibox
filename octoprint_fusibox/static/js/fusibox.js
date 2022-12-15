@@ -367,7 +367,7 @@ $(function() {
 
         $("#camera-action-image").click(e => {
             window.open(PLUGIN_BASEURL  + 'fusibox/image/feed', '_blank');
-            refreshFiles();
+            this.refreshFiles();
         });
 
         $("#camera-action-video").click(e => {
@@ -375,7 +375,7 @@ $(function() {
                 e.target.style.color = "black";
                 $.get(PLUGIN_BASEURL + 'fusibox/video/stop');
                 this.settingsModel.settings.plugins.fusibox.videoRecording(false);
-                setTimeout(() => refreshFiles(), 2000);
+                setTimeout(() => this.refreshFiles(), 2000);
             } else {
                 $.get(PLUGIN_BASEURL + 'fusibox/video/start');
                 this.settingsModel.settings.plugins.fusibox.videoRecording(true);
@@ -388,7 +388,7 @@ $(function() {
                 e.target.style.color = "black";
                 this.settingsModel.settings.plugins.fusibox.audioRecording(false);
                 $.get(PLUGIN_BASEURL + 'fusibox/audio/stop');
-                setTimeout(() => refreshFiles(), 2000);
+                setTimeout(() => this.refreshFiles(), 2000);
             } else {
                 $.get(PLUGIN_BASEURL + 'fusibox/audio/start');
                 this.settingsModel.settings.plugins.fusibox.audioRecording(true);
@@ -420,13 +420,21 @@ $(function() {
             e.target.disabled = true;
             if (this.settings['relay_mode'] && this.settings['relay_mode']['value'] == 'timer') {
                 if (Number(this.outputs['relay_1']['value'])) {
-                    if (confirm(gettext('Are you sure?'))) this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                    if (confirm(gettext('Are you sure?'))) {
+                        this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
+                    } else {
+                        e.target.disabled = false;
+                    }
                 } else {
                     this.sendSettings('{"relay_timeout":{"started":' + ((new Date()).getTime() * (Number(this.outputs['relay_1']['value']) * 0.1 || 1) / 1000) + '}}');
                 }
             } else {
                 if (Number(this.outputs['relay_1']['value'])) {
-                    if (confirm(gettext('Are you sure?'))) this.sendSettings('{"relay_value":{"value":0}}');
+                    if (confirm(gettext('Are you sure?'))) {
+                        this.sendSettings('{"relay_value":{"value":0}}');
+                    } else {
+                        e.target.disabled = false;
+                    }
                 } else {
                     this.sendSettings('{"relay_value":{"value":1}}');
                 }
@@ -449,7 +457,68 @@ $(function() {
             $.get(PLUGIN_BASEURL  + 'fusibox/settings');
         });
 
-        this.onBeforeWizardFinish = function () {   
+        this.refreshFiles = () => {
+            fetch(PLUGIN_BASEURL + 'fusibox/file/list')
+                .then(data => data.json())
+                .then(data => {
+                    let noData = true;
+                    $('#files-container tbody').html('');
+                    for (image of data.images) {
+                        $('#files-container tbody').append('<tr>' +
+                            '<td><input type="checkbox" class="file" id="file|image|' + image.name + '"></td>' +
+                            '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=image&name=' + image.name + '" target="_blank">' + image.name + '</a></td>' +
+                            '<td>' + gettext('Image') + '</td>' +
+                            '<td>' + image.size + 'KB</td>');
+                        noData = false;
+                    }
+                    for (video of data.videos) {
+                        $('#files-container tbody').append('<tr>' +
+                            '<td><input type="checkbox" class="file" id="file|video|' + video.name + '"></td>' +
+                            '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=video&name=' + video.name + '" target="_blank">' + video.name + '</a></td>' +
+                            '<td>' + gettext('Video') + '</td>' +
+                            '<td>' + video.size + 'KB</td>');
+                        noData = false;
+                    }
+                    for (audio of data.audios) {
+                        $('#files-container tbody').append('<tr>' +
+                            '<td><input type="checkbox" class="file" id="file|audio|' + audio.name + '"></td>' +
+                            '<td><a href="' + PLUGIN_BASEURL + 'fusibox/file?type=audio&name=' + audio.name + '" target="_blank">' + audio.name + '</a></td>' +
+                            '<td>' + gettext('Audio') + '</td>' +
+                            '<td>' + audio.size + 'KB</td>');
+                        noData = false;
+                    }
+    
+                    if (noData) {
+                        document.getElementById('files-container-all').style.display = 'none';
+                    } else {
+                        document.getElementById('files-container-all').style.display = 'block';
+                    }
+                });
+        }
+    
+        this.deleteFiles = () => {
+            filesToDelete = Array.from(document.querySelectorAll('[id^="file|"]:checked')).map(item => {
+                return {
+                    type: item.id.split('|')[1],
+                    name: item.id.split('|')[2]
+                }
+            });
+    
+            if (confirm('Are you sure?')) {
+                $.ajax({
+                    method: 'POST',
+                    url: PLUGIN_BASEURL + 'fusibox/file/delete', 
+                    data: JSON.stringify({ files: filesToDelete }),
+                    contentType: 'application/json'
+                }).done(data => {
+                    if (data.result) this.refreshFiles();
+                });
+            }
+        }
+    
+        this.refreshFiles();
+
+        this.onBeforeWizardFinish = () => {   
             if (!$("#wizard_plugin_fusibox").length) {
                 return;
             }
